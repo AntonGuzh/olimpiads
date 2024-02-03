@@ -7,5 +7,5 @@ is-testing: true
 
 hello-endpoint: '[::1]:8081'
 
-# pg_grpc_service_template_db-1 is the service name + _ + filename of the db_1.sql
-dbconnection: 'postgresql://testsuite@localhost:15433/pg_grpc_service_template_db_1'
+# olimpiads_db-1 is the service name + _ + filename of the db_1.sql
+dbconnection: 'postgresql://testsuite@localhost:15433/olimpiads_db_1'
