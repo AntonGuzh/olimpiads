@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(olimpiads CXX)
+set(CMAKE_CXX_STANDARD 20)
 
 # Enable userver libraries that are needed in this project
 set(USERVER_FEATURE_POSTGRESQL ON CACHE BOOL "" FORCE)
@@ -9,6 +10,7 @@ set(USERVER_FEATURE_GRPC ON CACHE BOOL "" FORCE)
 set(USERVER_FEATURE_CRYPTOPP_BLAKE2 OFF CACHE BOOL "" FORCE)
 set(USERVER_FEATURE_GRPC_CHANNELZ OFF CACHE BOOL "" FORCE)
 set(USERVER_FEATURE_REDIS_HI_MALLOC ON CACHE BOOL "" FORCE)
+set(USERVER_FEATURE_PATCH_LIBPQ OFF CACHE BOOL "" FORCE)
 
 
 # Adding userver dependency
@@ -18,16 +20,22 @@ userver_setup_environment()
 
 # Common sources
 add_library(${PROJECT_NAME}_objs OBJECT
-    src/hello.hpp
-    src/hello.cpp
-    src/hello_client.hpp
-    src/hello_client.cpp
+    src/components/service/hello.hpp
+    src/components/service/hello.cpp
+    src/db/impl/sql.hpp
+    src/db/db.hpp
+    src/db/db.cpp
+    src/exceptions/exceptions.hpp
+    src/models/content.hpp
+    src/models/filter.hpp
+    src/models/task.hpp
+    src/utils/ranges.hpp
 )
 target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver-postgresql)
 
 # Create a proto library with userver extensions
 include(GrpcTargets)
-userver_add_grpc_library(${PROJECT_NAME}_proto PROTOS handlers/hello.proto)
+userver_add_grpc_library(${PROJECT_NAME}_proto PROTOS handlers/tasks_bank.proto)
 target_link_libraries(${PROJECT_NAME}_objs PUBLIC ${PROJECT_NAME}_proto)
 
 
@@ -36,20 +44,20 @@ add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_objs)
 
 
-# Unit Tests
-add_executable(${PROJECT_NAME}_unittest
-    src/hello_test.cpp
-)
-target_link_libraries(${PROJECT_NAME}_unittest PRIVATE ${PROJECT_NAME}_objs userver-utest)
-add_google_tests(${PROJECT_NAME}_unittest)
+# # Unit Tests
+# add_executable(${PROJECT_NAME}_unittest
+#     src/hello_test.cpp
+# )
+# target_link_libraries(${PROJECT_NAME}_unittest PRIVATE ${PROJECT_NAME}_objs userver-utest)
+# add_google_tests(${PROJECT_NAME}_unittest)
 
 
-# Benchmarks
-add_executable(${PROJECT_NAME}_benchmark
-    src/hello_benchmark.cpp
-)
-target_link_libraries(${PROJECT_NAME}_benchmark PRIVATE ${PROJECT_NAME}_objs userver-ubench)
-add_google_benchmark_tests(${PROJECT_NAME}_benchmark)
+# # Benchmarks
+# add_executable(${PROJECT_NAME}_benchmark
+#     src/hello_benchmark.cpp
+# )
+# target_link_libraries(${PROJECT_NAME}_benchmark PRIVATE ${PROJECT_NAME}_objs userver-ubench)
+# add_google_benchmark_tests(${PROJECT_NAME}_benchmark)
 
 
 # Functional Tests

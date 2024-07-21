@@ -22,10 +22,7 @@ components_manager:
             # https://grpc.github.io/grpc/core/group__grpc__arg__keys.html
             channel-args: {}
 
-        handler-hello:
-
-        hello-client:
-            endpoint: $hello-endpoint
+        task-bank-service:
 
         grpc-server:
             port: 8081
@@ -74,7 +71,7 @@ components_manager:
             throttling_enabled: false
             url_trailing_slash: strict-match
 
-        postgres-db-1:
+        postgres-db:
             dbconnection: $dbconnection
             blocking_task_processor: fs-task-processor
             dns_resolver: async

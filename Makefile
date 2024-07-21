@@ -73,7 +73,6 @@ format:
 
 # Internal hidden targets that are used only in docker environment
 --in-docker-start-debug --in-docker-start-release: --in-docker-start-%: install-%
-	psql 'postgresql://user:password@service-postgres:5432/olimpiads_db-1' -f ./postgresql/data/initial_data.sql
 	/home/user/.local/bin/olimpiads \
 		--config /home/user/.local/etc/olimpiads/static_config.yaml \
 		--config_vars /home/user/.local/etc/olimpiads/config_vars.docker.yaml
@@ -81,7 +80,7 @@ format:
 # Build and run service in docker environment
 .PHONY: docker-start-service-debug docker-start-service-release
 docker-start-service-debug docker-start-service-release: docker-start-service-%:
-	$(DOCKER_COMPOSE) run -p 8080:8080 --rm olimpiads-container make -- --in-docker-start-$*
+	$(DOCKER_COMPOSE) run -p 127.0.0.1:8081:8081 --rm olimpiads-container make -- --in-docker-start-$*
 
 # Start targets makefile in docker environment
 .PHONY: docker-cmake-debug docker-build-debug docker-test-debug docker-clean-debug docker-install-debug docker-cmake-release docker-build-release docker-test-release docker-clean-release docker-install-release

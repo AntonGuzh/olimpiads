@@ -10,4 +10,4 @@ server-grpc-port: 8081
 
 hello-endpoint: '[::1]:8081'
 
-dbconnection: 'postgresql://olimpiads_user:password@localhost:5432/olimpiads_db_1'
+dbconnection: 'postgresql://postgres:123456789@localhost:5432/olimpiads_db'

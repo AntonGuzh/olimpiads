@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package olimpiads.astronomy.v1;
+
+option java_multiple_files = true;
+option java_package = "com.olimpiads.astronomy.v1";
+option java_outer_classname = "TaskProto";
+
+// import "google/protobuf/field_mask.proto";
+// import "google/protobuf/timestamp.proto";
+
+service TasksBankService {
+	rpc FilterTasks(FilterTasksRequest) returns (ListTasksResponse) {}
+
+	rpc CreateTask(Task) returns (Task) {}
+}
+
+message Filter {
+	repeated Olimpiad olimpiads = 1;
+	int32 start_year = 2;
+    int32 end_year = 3;
+	Tour tour = 4;
+	repeated int32 grades = 5;
+	repeated Topic included_topics = 6;
+	repeated Topic excluded_topics = 7;
+}
+
+message FilterTasksRequest {
+	Filter filter = 1;
+    // Defult is 10
+    // Maximum is 50
+    int32 page_size = 2;
+
+    // A page token, received from a previous `ListTasks` call.
+    // Provide this to retrieve the subsequent page.
+    string page_token = 3;
+}
+
+message ListTasksResponse {
+    repeated Task tasks = 1;
+
+    // A token, which can be sent as `page_token` to retrieve the next page.
+    // If this field is omitted, there are no subsequent pages.
+    string next_page_token = 2;
+}
+
+message GradeNumber {
+    int32 grade = 1;
+    int32 number = 2;
+}
+
+message Image {
+    string name = 1;
+
+    int64 size = 2;
+    int64 width = 3;
+    int64 heigth = 4;
+
+    bytes content = 5;
+
+   bool is_statement_image = 6;
+   bool is_solution_image = 7;
+}
+
+message Content {
+    string statement_text = 1;
+    string solution_text = 2;
+
+    repeated Image images = 3;
+}
+
+message Task {
+    string name = 99;
+
+    Olimpiad olimpiad = 1;
+	int32 year = 2;
+    Tour tour = 3;
+    repeated GradeNumber grades_and_numbers = 4;
+    repeated Topic topics = 5;
+
+    string author = 10;
+    string title = 11;
+
+    Content content = 20;
+}
+
+enum Olimpiad {
+    UNDEFINED_OLIMPIAD = 0;
+
+    ALL_RUSSIAN_MUNICIPAL = 1;
+    ALL_RUSSIAN_REGION = 2;
+    ALL_RUSSIAN_FINAL = 3;
+
+    MAO_FIRST = 5;
+    MAO_SECOND = 6;
+    MAO_FINAL = 7;
+
+    SPB_QUALIFUING = 10;
+    SPB_FINAL = 11;
+
+    IAO = 15;
+    IOAA = 16;
+
+    CUSTOM = 20;
+}
+
+enum Tour {
+    UNDEFINED_TOUR = 0;
+	THEORETICAL = 1;
+	PRACTICAL = 2;
+	BLITZ = 3;
+	OBSERVATION = 5;
+}
+
+enum Topic {
+    UNDEFINED_TOPIC = 0;
+    TELESCOPE = 1;
+    POGSON = 2;
+    SPECTRUM = 3;
+    EMITTING = 4;
+    ABSORPTION = 5;
+    COSMOLOGY = 6;
+    ATMOSPHERE = 7;
+    SPACE_FLIGHTS = 8;
+    ORBIT_PARAMETERS = 9;
+    CONSERVATION_LAWS = 10;
+    CELESTIAL_SPHERE = 11;
+    GEOMETRY_AND_TIME = 12;
+    ECLIPS = 13;
+    PLANET_CONFIGURATIONS = 14;
+    CALENDARS = 15;
+}
